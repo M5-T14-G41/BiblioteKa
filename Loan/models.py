@@ -1,9 +1,10 @@
 from django.db import models
 import datetime as dt
 
+
 def generate_devolution_date():
     today = dt.date.today()
-    next_week = today + dt.timedelta(days=7)
+    next_week = today + dt.timedelta(days=8)
 
     while next_week.weekday() >= 5:
         next_week = dt.timedelta(days=1)
