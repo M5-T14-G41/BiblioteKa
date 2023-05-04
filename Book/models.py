@@ -10,4 +10,5 @@ class Book(models.Model):
 class Copy(models.Model):
     isBorrowed = models.BooleanField(default=False)
     book = models.ForeignKey(
-        "books.Book", on_delete=models.CASCADE, related_name="book_copy")
+        "Book.Book", on_delete=models.CASCADE, related_name="book_copy")
+
