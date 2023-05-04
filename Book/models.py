@@ -4,6 +4,7 @@ from django.db import models
 
 class Book(models.Model):
     name = models.CharField(max_length=50, null=False, unique=True)
+    author = models.CharField(max_length=50, null=False, unique=False)
 
 
 class Copy(models.Model):
