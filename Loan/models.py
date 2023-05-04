@@ -18,7 +18,7 @@ class Loan(models.Model):
     )
     copy_id = models.ForeignKey(
         "Book.Copy",
-        on_delete=models.CASCADEm
+        on_delete=models.CASCADE,
         related_name="copy_loaned",
     )
     devolution_date = generate_devolution_date()
