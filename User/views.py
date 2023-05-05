@@ -48,3 +48,4 @@ class UserRetriverView(APIView):
         serializer.save()
 
         return Response(serializer.data, status.HTTP_200_OK)
+
