@@ -7,7 +7,7 @@ def generate_devolution_date():
     next_week = today + dt.timedelta(days=8)
 
     while next_week.weekday() >= 5:
-        next_week = dt.timedelta(days=1)
+        next_week += dt.timedelta(days=1)
     return next_week
 
 
