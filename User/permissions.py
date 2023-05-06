@@ -28,3 +28,8 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 class IsAuthenticated(permissions.BasePermission):
     def has_permission(self, request: Request, view: View) -> bool:
         return bool(request.user.is_authenticated)
+
+
+class IsAdmin(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View) -> bool:
+        return (request.user.is_authenticated and request.user.is_employee)
