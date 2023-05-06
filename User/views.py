@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView, Request, Response, status
+from rest_framework.generics import ListAPIView
 
-from User.permissions import UserAutentication
+
+from User.permissions import UserAutentication, IsAdmin
 from .models import User
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UsersSerializer
@@ -49,3 +51,13 @@ class UserRetriverView(APIView):
 
         return Response(serializer.data, status.HTTP_200_OK)
 
+
+class RetrieveUserStatusView(ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdmin]
+
+    def get(self, request: Request, user_id: int) -> Response:
+        user = get_object_or_404(User, id=user_id)
+        serializer = UsersSerializer(user)
+        message = {"is_banned": serializer.data["is_banned"]}
+        return Response(message, status.HTTP_200_OK)
