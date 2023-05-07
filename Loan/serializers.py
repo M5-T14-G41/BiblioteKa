@@ -13,6 +13,13 @@ class LoanSerializer(serializers.ModelSerializer):
             raise ValidationError({"message": "This user is banned"})
         return Loan.objects.create(**validated_data)
 
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            if key == "is_returned":
+                setattr(instance, key, value)
+            instance.save()
+        return instance
+
     class Meta:
         model = Loan
         fields = [
@@ -21,4 +28,4 @@ class LoanSerializer(serializers.ModelSerializer):
             "devolution_date",
             "is_returned",
         ]
-
+        

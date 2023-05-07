@@ -22,5 +22,5 @@ class Loan(models.Model):
         on_delete=models.CASCADE,
         related_name="copy_loaned",
     )
-    devolution_date = generate_devolution_date()
+    devolution_date = models.DateField(default=generate_devolution_date)
     is_returned = models.BooleanField(default=False)
