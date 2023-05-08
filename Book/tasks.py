@@ -9,7 +9,7 @@ from django.conf import settings
 @shared_task
 def send_notification(user, book, status):
     try:
-        book_name = book.title
+        book_name = book.name
         user_email = user.email
         subject = f'Você está seguindo o livro {book_name}'
 
