@@ -2,6 +2,8 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework.views import APIView, Request, Response, status
 from rest_framework.generics import ListAPIView
 from datetime import datetime as dt
+from Book.models import Book
+from Book.serializers import BookSerializer
 
 
 from User.permissions import UserAutentication, IsAdmin, IsAdminOrReadyOnlySafeMethods
@@ -83,3 +85,5 @@ class UserLoanView(ListAPIView):
         user_loans = get_list_or_404(Loan, user_id=user_id)
         serializer = LoanSerializer(user_loans, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
+
+

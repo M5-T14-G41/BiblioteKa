@@ -1,10 +1,13 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from User.models import User
 from .models import Book
 from .serializers import BookSerializer, CopySerializer
+from rest_framework.views import APIView, Request, Response, status
 
-from User.permissions import IsAdminOrReadOnly
+from User.permissions import IsAdminOrReadOnly, IsAuthenticated
 
 
 class BookView(generics.ListCreateAPIView):
@@ -31,3 +34,44 @@ class CopyCreateView(generics.CreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
     serializer_class = CopySerializer
+
+
+class FollowingView(APIView):
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, request: Request, book_id: int) -> Response:
+        user_requester = request.user.id
+
+        book = get_object_or_404(Book, id=book_id)
+        user = get_object_or_404(User, id=user_requester)
+
+        book.following.add(user)
+        return Response({"message": f"Você está seguindo o livro {book.name}!"}, status.HTTP_201_CREATED)
+
+
+class GetFollowingView(APIView):
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request: Request) -> Response:
+        user = get_object_or_404(User, id=request.user.id)
+
+        book_followed = Book.objects.filter(
+            following=user
+        )
+
+        serializer = BookSerializer(book_followed, many=True)
+
+        return Response({"user_id": user.id, "books_followed": serializer.data}, status.HTTP_200_OK)
+
+
+class UnfollowView(APIView):
+    authentication_classes = [JWTAuthentication]
+
+    def delete(self, request: Request, book_id: int) -> Response:
+
+        book = get_object_or_404(Book, id=book_id)
+        user = get_object_or_404(User, id=request.user.id)
+
+        book.following.remove(user)       
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
