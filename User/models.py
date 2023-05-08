@@ -7,4 +7,4 @@ class User(AbstractUser):
     email = models.EmailField(max_length=120, null=False)
     password = models.CharField(max_length=120, null=False)
     is_employee = models.BooleanField(default=False)
-    is_banned = models.BooleanField(default=False)
+    is_banned = models.DateField(null=True)

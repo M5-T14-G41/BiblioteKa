@@ -16,11 +16,12 @@ class UsersSerializer(serializers.ModelSerializer):
     )
     password = serializers.CharField(max_length=120, write_only=True)
     is_employee = serializers.BooleanField(default=False, allow_null=True)
-    is_banned = serializers.BooleanField(default=False, allow_null=False)
+    is_banned = serializers.DateField(allow_null=True)
 
     class Meta:
         model = User
-        fields = ['id', 'email','username', 'password', 'is_superuser', 'is_employee', 'is_banned']
+        fields = ['id', 'email', 'username', 'password',
+                  'is_superuser', 'is_employee', 'is_banned']
         read_only_fields = ['id']
         write_only_fields = ['is_superuser']
 
@@ -44,4 +45,3 @@ class UsersSerializer(serializers.ModelSerializer):
 
     def __str__(self):
         return f"Name {self.username} é id: [{self.id}]"
-

@@ -67,9 +67,10 @@ class RetrieveUserStatusView(ListAPIView):
         serializer = LoanSerializer(user_loans, many=True)
         loans = [*serializer.data]
         not_returned = []
-        user_status = {"banned": False}
+        user_status = {"banned": None}
         for loan in loans:
-            convert_devolution_date = dt.strptime(loan["devolution_date"], "%Y-%m-%d")
+            convert_devolution_date = dt.strptime(
+                loan["devolution_date"], "%Y-%m-%d")
             if dt.now() > convert_devolution_date:
                 not_returned.append(loan)
                 user_status["banned"] = True
@@ -85,5 +86,3 @@ class UserLoanView(ListAPIView):
         user_loans = get_list_or_404(Loan, user_id=user_id)
         serializer = LoanSerializer(user_loans, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
-
-
