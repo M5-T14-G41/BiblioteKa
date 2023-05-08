@@ -33,3 +33,14 @@ class IsAuthenticated(permissions.BasePermission):
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request: Request, view: View) -> bool:
         return (request.user.is_authenticated and request.user.is_employee)
+
+
+class IsAdminOrReadyOnlySafeMethods(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View):
+        if request.user.is_authenticated:
+            if request.user.is_superuser:
+                return True
+            else:
+                user_id = view.kwargs.get('user_id')
+                return request.user.id == user_id
+        return False

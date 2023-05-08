@@ -4,7 +4,7 @@ from rest_framework.generics import ListAPIView
 from datetime import datetime as dt
 
 
-from User.permissions import UserAutentication, IsAdmin
+from User.permissions import UserAutentication, IsAdmin, IsAdminOrReadyOnlySafeMethods
 from .models import User
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UsersSerializer
@@ -77,7 +77,7 @@ class RetrieveUserStatusView(ListAPIView):
 
 class UserLoanView(ListAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAdminOrReadyOnlySafeMethods]
 
     def get(self, request: Request, user_id: int) -> Response:
         user_loans = get_list_or_404(Loan, user_id=user_id)
