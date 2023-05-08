@@ -73,3 +73,13 @@ class RetrieveUserStatusView(ListAPIView):
                 user_status["banned"] = True
                 user_status["delayed_books"] = not_returned
         return Response(user_status, status.HTTP_200_OK)
+
+
+class UserLoanView(ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdmin]
+
+    def get(self, request: Request, user_id: int) -> Response:
+        user_loans = get_list_or_404(Loan, user_id=user_id)
+        serializer = LoanSerializer(user_loans, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
