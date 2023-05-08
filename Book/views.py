@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Book
-from .serializers import BookSerializer
+from .serializers import BookSerializer, CopySerializer
 
 from User.permissions import IsAdminOrReadOnly
 
@@ -24,3 +24,10 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+
+
+class CopyCreateView(generics.CreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminOrReadOnly]
+
+    serializer_class = CopySerializer

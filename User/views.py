@@ -1,6 +1,7 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework.views import APIView, Request, Response, status
 from rest_framework.generics import ListAPIView
+from datetime import datetime as dt
 
 
 from User.permissions import UserAutentication, IsAdmin
@@ -8,6 +9,9 @@ from .models import User
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UsersSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from Loan.models import Loan
+from Loan.serializers import LoanSerializer
 
 
 class UserView(APIView):
@@ -57,7 +61,25 @@ class RetrieveUserStatusView(ListAPIView):
     permission_classes = [IsAdmin]
 
     def get(self, request: Request, user_id: int) -> Response:
-        user = get_object_or_404(User, id=user_id)
-        serializer = UsersSerializer(user)
-        message = {"is_banned": serializer.data["is_banned"]}
-        return Response(message, status.HTTP_200_OK)
+        user_loans = get_list_or_404(Loan, user_id=user_id, is_returned=False)
+        serializer = LoanSerializer(user_loans, many=True)
+        loans = [*serializer.data]
+        not_returned = []
+        user_status = {"banned": False}
+        for loan in loans:
+            convert_devolution_date = dt.strptime(loan["devolution_date"], "%Y-%m-%d")
+            if dt.now() > convert_devolution_date:
+                not_returned.append(loan)
+                user_status["banned"] = True
+                user_status["delayed_books"] = not_returned
+        return Response(user_status, status.HTTP_200_OK)
+
+
+class UserLoanView(ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdmin]
+
+    def get(self, request: Request, user_id: int) -> Response:
+        user_loans = get_list_or_404(Loan, user_id=user_id)
+        serializer = LoanSerializer(user_loans, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
