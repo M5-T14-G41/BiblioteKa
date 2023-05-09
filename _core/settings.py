@@ -47,6 +47,8 @@ if RENDER_EXTERNAL_HOSTNAME:
 THIRD_PARTY_APPS = [
     "rest_framework",
     "django_apscheduler",
+    'drf_spectacular',
+
 ]
 
 MY_APPS = [
@@ -149,6 +151,17 @@ AUTH_PASSWORD_VALIDATORS = [
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'BiblioteKa',
+    'DESCRIPTION': 'Sistema gerenciador de biblioteca',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 # Internationalization
