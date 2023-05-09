@@ -29,4 +29,4 @@ def send_notification(user, book, status):
         send_mail(subject, message, email_from, recipient)
 
     except Exception as e:
-        
+        print(e)
