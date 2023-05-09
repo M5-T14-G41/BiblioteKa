@@ -9,6 +9,8 @@ from rest_framework.views import APIView, Request, Response, status
 
 from User.permissions import IsAdminOrReadOnly, IsAuthenticated
 
+from .tasks import send_notification
+
 
 class BookView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
@@ -46,6 +48,7 @@ class FollowingView(APIView):
         user = get_object_or_404(User, id=user_requester)
 
         book.following.add(user)
+        send_notification(user, book, "Following")
         return Response({"message": f"Você está seguindo o livro {book.name}!"}, status.HTTP_201_CREATED)
 
 
@@ -73,5 +76,6 @@ class UnfollowView(APIView):
         user = get_object_or_404(User, id=request.user.id)
 
         book.following.remove(user)       
+        send_notification(user, book, "unfollowing")
 
         return Response(status=status.HTTP_204_NO_CONTENT)
