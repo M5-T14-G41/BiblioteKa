@@ -48,7 +48,7 @@ class FollowingView(APIView):
         user = get_object_or_404(User, id=user_requester)
 
         book.following.add(user)
-        send_notification(user, book, "Following")
+        send_notification(user, book, "following")
         return Response({"message": f"Você está seguindo o livro {book.name}!"}, status.HTTP_201_CREATED)
 
 
@@ -75,7 +75,7 @@ class UnfollowView(APIView):
         book = get_object_or_404(Book, id=book_id)
         user = get_object_or_404(User, id=request.user.id)
 
-        book.following.remove(user)       
+        book.following.remove(user)
         send_notification(user, book, "unfollowing")
 
         return Response(status=status.HTTP_204_NO_CONTENT)

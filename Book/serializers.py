@@ -1,4 +1,7 @@
+from django.forms import model_to_dict
 from rest_framework import serializers
+
+from Book.tasks import send_notification
 
 from .models import Book, Copy
 
@@ -15,6 +18,12 @@ class BookSerializer(serializers.ModelSerializer):
 
 class CopySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
+
+        book = validated_data["book"]
+
+        for user in model_to_dict(book)["following"]:
+            send_notification(user, book, "isavaliable")
+
         return Copy.objects.create(**validated_data)
 
     class Meta:

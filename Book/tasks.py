@@ -15,8 +15,8 @@ def send_notification(user, book, status):
 
         if status == "following":
             message = f'Você está seguindo o livro: {book_name} e receberá notificações sobre o atual estado do livro a cada empréstimo.'
-        elif status == "available":
-            message = f'Uma cópia do livro {book_name} foi emprestada mas o mesmo ainda encontra-se disponível para empréstimo.'
+        elif status == "isavaliable":
+            message = f'Uma cópia do livro {book_name} está disponível para empréstimo.'
         elif status == "unfollowing":
             subject = f'Você parou de seguir o livro {book_name}.'
             message = f'Você parou de segir o livro {book_name} e por isso não irá receber mais notificações sobre seu estado!'
