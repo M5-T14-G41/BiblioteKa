@@ -16,7 +16,7 @@ class UsersSerializer(serializers.ModelSerializer):
     )
     password = serializers.CharField(max_length=120, write_only=True)
     is_employee = serializers.BooleanField(default=False, allow_null=True)
-    is_banned = serializers.DateField(allow_null=True)
+    is_banned = serializers.DateField(default=None, allow_null=True)
 
     class Meta:
         model = User
